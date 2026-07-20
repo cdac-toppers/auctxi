@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AuctXI — Repository & Folder Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0a0a0c;
+    --bg-2:#101013;
+    --surface:#15151a;
+    --surface-2:#1c1c22;
+    --border:rgba(255,255,255,0.08);
+    --border-strong:rgba(255,255,255,0.16);
+    --fg:#f4f4f5;
+    --fg-dim:#a1a1aa;
+    --fg-muted:#6b6b75;
+    --gold:#fbbf24;
+    --gold-soft:#f59e0b;
+    --red:#ef4444;
+    --cyan:#22d3ee;
+    --green:#34d399;
+    --pink:#fb7185;
+    --serif:'Instrument Serif', serif;
+    --sans:'Space Grotesk', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:var(--sans);
+    font-size:15px;
+    line-height:1.6;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";
+    position:fixed;inset:0;
+    pointer-events:none;
+    z-index:1;
+    opacity:0.035;
+    background-image:url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+  .shell{display:grid;grid-template-columns:260px 1fr;max-width:1440px;margin:0 auto;position:relative;z-index:2}
+  
+  /* SIDENAV */
+  .sidenav{
+    position:sticky;top:0;height:100vh;
+    padding:32px 24px;
+    border-right:1px solid var(--border);
+    display:flex;flex-direction:column;
+    background:linear-gradient(180deg,rgba(15,15,18,0.6),rgba(10,10,12,0.95));
+    backdrop-filter:blur(8px);
+    overflow-y:auto;
+  }
+  .sidenav::-webkit-scrollbar{width:4px}
+  .sidenav::-webkit-scrollbar-thumb{background:var(--border)}
+  
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:36px;text-decoration:none}
+  .brand-mark{
+    width:36px;height:36px;border-radius:8px;
+    background:linear-gradient(135deg,var(--gold),#b45309);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-style:italic;font-size:22px;color:#0a0a0c;
+    box-shadow:0 4px 20px rgba(251,191,36,0.25);
+  }
+  .brand-name{font-family:var(--serif);font-size:24px;letter-spacing:-0.02em;color:var(--fg)}
+  .brand-sub{font-size:10px;color:var(--fg-muted);letter-spacing:0.2em;text-transform:uppercase;margin-top:2px}
+  
+  .nav-section{font-size:10px;letter-spacing:0.2em;color:var(--fg-muted);text-transform:uppercase;margin:24px 0 10px;padding-left:12px}
+  .nav-link{
+    display:block;padding:7px 12px;border-radius:6px;
+    color:var(--fg-dim);text-decoration:none;font-size:12.5px;
+    transition:all 0.2s;border-left:2px solid transparent;
+    margin-left:-2px;
+  }
+  .nav-link:hover{color:var(--fg);background:rgba(255,255,255,0.03)}
+  .nav-link.active{color:var(--gold);border-left-color:var(--gold);background:rgba(251,191,36,0.06)}
+  .nav-link .num{font-family:var(--mono);font-size:10px;color:var(--fg-muted);margin-right:8px}
+  .nav-link.active .num{color:var(--gold)}
+  
+  .progress-rail{
+    margin-top:auto;
+    padding-top:24px;border-top:1px solid var(--border);
+  }
+  .progress-track{height:3px;background:var(--surface-2);border-radius:2px;overflow:hidden}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--gold),#f59e0b);width:0%;transition:width 0.1s}
+  .progress-label{font-size:10px;color:var(--fg-muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:8px;display:flex;justify-content:space-between}
+  
+  /* MAIN */
+  main{padding:0 64px 120px;max-width:1100px}
+  
+  /* HERO */
+  .hero{
+    min-height:100vh;
+    display:flex;flex-direction:column;justify-content:center;
+    position:relative;padding:80px 0 60px;
+  }
+  .hero-canvas{position:absolute;inset:0;z-index:0;opacity:0.4}
+  .hero-content{position:relative;z-index:2}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:6px 14px;border:1px solid var(--border-strong);
+    border-radius:999px;font-size:11px;letter-spacing:0.25em;
+    text-transform:uppercase;color:var(--fg-dim);
+    background:rgba(255,255,255,0.02);margin-bottom:32px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  
+  h1.hero-title{
+    font-family:var(--serif);
+    font-size:clamp(56px,8vw,120px);
+    line-height:0.95;letter-spacing:-0.03em;
+    font-weight:400;margin-bottom:28px;
+  }
+  .hero-title em{color:var(--gold);font-style:italic}
+  .hero-lede{
+    font-size:20px;color:var(--fg-dim);max-width:680px;
+    line-height:1.55;margin-bottom:48px;
+  }
+  
+  /* SECTIONS */
+  section{padding:80px 0;border-top:1px solid var(--border);scroll-margin-top:40px}
+  .section-num{
+    font-family:var(--mono);font-size:11px;letter-spacing:0.3em;
+    color:var(--gold);text-transform:uppercase;margin-bottom:16px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .section-num::before{content:"";width:24px;height:1px;background:var(--gold)}
+  h2.section-title{
+    font-family:var(--serif);font-size:clamp(36px,5vw,56px);
+    line-height:1.05;letter-spacing:-0.02em;font-weight:400;
+    margin-bottom:20px;
+  }
+  h2.section-title em{color:var(--gold);font-style:italic}
+  .section-lede{font-size:17px;color:var(--fg-dim);max-width:680px;margin-bottom:40px;line-height:1.6}
+  
+  .callout {
+    border-left:3px solid var(--gold);
+    background:linear-gradient(90deg,rgba(251,191,36,0.08),transparent);
+    padding:20px 24px;margin:32px 0;border-radius:0 8px 8px 0;
+  }
+  .callout p{margin:0;color:var(--fg);font-size:15px}
+  .callout em{color:var(--gold);font-family:var(--serif);font-style:italic;font-size:18px;margin-right:6px}
+  .callout code{font-family:var(--mono);color:var(--gold);background:rgba(251,191,36,0.1);padding:2px 6px;border-radius:4px;font-size:13px}
+
+  /* DIAGRAMS */
+  .diagram-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px 32px;
+    margin: 32px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .diagram-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top, rgba(251,191,36,0.08), transparent 60%);
+    pointer-events: none;
+  }
+  .arch-svg, .connect-svg { width: 100%; height: auto; display: block; position: relative; z-index: 1; }
+  
+  /* FILE TREE */
+  .tree-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    margin-top: 24px;
+  }
+  .repo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .repo-header {
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .repo-icon {
+    width: 28px; height: 28px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold);
+  }
+  .repo-name {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .file-tree {
+    padding: 24px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--fg-dim);
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .file-tree .dir { color: var(--cyan); }
+  .file-tree .file { color: var(--fg-dim); }
+  .file-tree .com { color: var(--fg-muted); font-style: italic; }
+  .file-tree .hl { color: var(--gold); }
+  .file-tree .pin { color: var(--green); font-weight: 500; }
+  
+  .label-tag {
+    display:inline-block;
+    font-family:var(--mono);font-size:10px;
+    padding:3px 8px;border-radius:4px;
+    letter-spacing:0.1em;text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .label-tag.good{color:var(--green);background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2)}
+  .label-tag.bad{color:var(--red);background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2)}
+
+  /* FOOTER */
+  footer{
+    border-top:1px solid var(--border);
+    padding:60px 0 40px;margin-top:80px;
+    display:flex;justify-content:space-between;align-items:end;
+    flex-wrap:wrap;gap:24px;
+  }
+  .footer-brand{font-family:var(--serif);font-size:32px;color:var(--fg)}
+  .footer-brand em{color:var(--gold);font-style:italic}
+  .footer-meta{font-size:11px;color:var(--fg-muted);letter-spacing:0.15em;text-transform:uppercase;text-align:right}
+  
+  /* REVEAL ANIMATIONS */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.8s ease,transform 0.8s ease}
+  .reveal.in{opacity:1;transform:translateY(0)}
+  
+  /* MOBILE */
+  @media (max-width:1024px){
+    .shell{grid-template-columns:1fr}
+    .sidenav{position:fixed;top:0;left:-280px;width:280px;z-index:100;transition:left 0.3s}
+    .sidenav.open{left:0}
+    main{padding:0 32px 80px}
+    .menu-toggle{display:flex !important}
+  }
+  .menu-toggle{
+    display:none;position:fixed;top:20px;right:20px;z-index:101;
+    width:44px;height:44px;border-radius:8px;
+    background:var(--surface);border:1px solid var(--border-strong);
+    align-items:center;justify-content:center;cursor:pointer;
+  }
+  .menu-toggle span{width:18px;height:1.5px;background:var(--fg);position:relative}
+  .menu-toggle span::before,.menu-toggle span::after{
+    content:"";position:absolute;left:0;width:18px;height:1.5px;background:var(--fg);
+  }
+  .menu-toggle span::before{top:-6px}
+  .menu-toggle span::after{top:6px}
+</style>
+</head>
+<body>
+
+<button class="menu-toggle" onclick="document.querySelector('.sidenav').classList.toggle('open')"><span></span></button>
+
+<div class="shell">
+
+  <!-- SIDENAV -->
+  <aside class="sidenav">
+    <a href="#top" class="brand">
+      <div class="brand-mark">A</div>
+      <div>
+        <div class="brand-name">AuctXI</div>
+        <div class="brand-sub">Repo Blueprint</div>
+      </div>
+    </a>
+
+    <div class="nav-section">Structure</div>
+    <a class="nav-link" href="#overview"><span class="num">01</span>Overview</a>
+    <a class="nav-link" href="#frontend"><span class="num">02</span>Frontend Repo</a>
+    <a class="nav-link" href="#backend"><span class="num">03</span>Backend Repo</a>
+    <a class="nav-link" href="#services"><span class="num">04</span>Services Repo</a>
+    <a class="nav-link" href="#infra"><span class="num">05</span>Infrastructure Repo</a>
+    
+    <div class="nav-section">Execution</div>
+    <a class="nav-link" href="#connections"><span class="num">06</span>Connections</a>
+    <a class="nav-link" href="#day1"><span class="num">07</span>Day 1 Strategy</a>
+
+    <div class="progress-rail">
+      <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label"><span>Reading</span><span id="progressPct">0%</span></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main id="top">
+
+    <!-- HERO -->
+    <div class="hero">
+      <canvas class="hero-canvas" id="heroCanvas"></canvas>
+      <div class="hero-content">
+        <div class="eyebrow"><span class="dot"></span>Architecture & Folder Blueprint</div>
+        <h1 class="hero-title">Four repositories. <em>No chaos.</em></h1>
+        <p class="hero-lede">Clean enough to be professional, without creating unnecessary overhead. This blueprint defines exactly where every file lives across the AuctXI ecosystem—Frontend, Backend, Microservices, and Infrastructure.</p>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="overview">
+      <div class="section-num reveal">Section 01</div>
+      <h2 class="section-title reveal">The <em>4-Repository</em> Architecture.</h2>
+      <p class="section-lede reveal">Each runtime unit gets its own Git history and branches. No permanent branches for Vijay, Akram, Rahil, or Prajwal—only branches based on Jira tickets.</p>
+
+      <div class="diagram-wrap reveal">
+        <svg class="arch-svg" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1c1c22"/>
+              <stop offset="100%" stop-color="#15151a"/>
+            </linearGradient>
+            <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+
+          <!-- React -->
+          <rect x="340" y="40" width="220" height="70" rx="12" fill="url(#g1)" stroke="#22d3ee" stroke-width="1.5"/>
+          <text x="450" y="70" text-anchor="middle" fill="#22d3ee" font-family="Space Grotesk" font-size="15" font-weight="600">React Frontend</text>
+          <text x="450" y="90" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">auctxi-frontend</text>
+
+          <line x1="450" y1="110" x2="450" y2="145" stroke="#fbbf24" stroke-width="1.5"/>
+          <polygon points="450,150 446,142 454,142" fill="#fbbf24"/>
+          <text x="460" y="135" fill="#fbbf24" font-family="JetBrains Mono" font-size="10">REST API</text>
+
+          <!-- Spring Boot -->
+          <rect x="180" y="155" width="540" height="140" rx="14" fill="url(#g1)" stroke="#fbbf24" stroke-width="1.5" filter="url(#glow)"/>
+          <text x="450" y="185" text-anchor="middle" fill="#fbbf24" font-family="Space Grotesk" font-size="16" font-weight="600">Spring Boot Main Backend</text>
+          <text x="450" y="205" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">auctxi-backend</text>
+          <line x1="200" y1="218" x2="700" y2="218" stroke="#3f3f46" stroke-width="0.5"/>
+          
+          <g font-family="JetBrains Mono" font-size="10" fill="#a1a1aa">
+            <rect x="200" y="230" width="100" height="28" rx="6" fill="#15151a" stroke="#3f3f46"/>
+            <text x="250" y="248" text-anchor="middle">Auth</text>
+            <rect x="310" y="230" width="100" height="28" rx="6" fill="#15151a" stroke="#3f3f46"/>
+            <text x="360" y="248" text-anchor="middle">User Mgmt</text>
+            <rect x="420" y="230" width="100" height="28" rx="6" fill="#15151a" stroke="#3f3f46"/>
+            <text x="470" y="248" text-anchor="middle">Auction</text>
+            <rect x="530" y="230" width="100" height="28" rx="6" fill="#15151a" stroke="#3f3f46"/>
+            <text x="580" y="248" text-anchor="middle">Bidding</text>
+            <rect x="640" y="230" width="60" height="28" rx="6" fill="#15151a" stroke="#3f3f46"/>
+            <text x="670" y="248" text-anchor="middle">Reports</text>
+          </g>
+
+          <!-- MySQL -->
+          <path d="M 450 295 L 450 330" stroke="#3f3f46" stroke-width="1.5" fill="none"/>
+          <polygon points="450,335 446,327 454,327" fill="#3f3f46"/>
+          <ellipse cx="450" cy="350" rx="80" ry="18" fill="url(#g1)" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="450" y="355" text-anchor="middle" fill="#f59e0b" font-family="JetBrains Mono" font-size="13" font-weight="500">MySQL</text>
+
+          <!-- Branches to .NET -->
+          <path d="M 380 350 Q 200 350 200 420" stroke="#3f3f46" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+          <path d="M 520 350 Q 700 350 700 420" stroke="#3f3f46" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+          <text x="280" y="380" fill="#6b6b75" font-family="JetBrains Mono" font-size="9">HTTP</text>
+          <text x="580" y="380" fill="#6b6b75" font-family="JetBrains Mono" font-size="9">HTTP</text>
+
+          <!-- Payment -->
+          <rect x="80" y="420" width="240" height="80" rx="12" fill="url(#g1)" stroke="#fb7185" stroke-width="1.5"/>
+          <text x="200" y="450" text-anchor="middle" fill="#fb7185" font-family="Space Grotesk" font-size="14" font-weight="600">Payment Service</text>
+          <text x="200" y="470" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">.NET Microservice</text>
+          
+          <line x1="200" y1="500" x2="200" y2="530" stroke="#fb7185" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="200" y="545" text-anchor="middle" fill="#fb7185" font-family="JetBrains Mono" font-size="10">↓ Razorpay</text>
+
+          <!-- Notification -->
+          <rect x="580" y="420" width="240" height="80" rx="12" fill="url(#g1)" stroke="#34d399" stroke-width="1.5"/>
+          <text x="700" y="450" text-anchor="middle" fill="#34d399" font-family="Space Grotesk" font-size="14" font-weight="600">Notification Service</text>
+          <text x="700" y="470" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">.NET Microservice</text>
+          
+          <line x1="700" y1="500" x2="700" y2="530" stroke="#34d399" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="700" y="545" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono" font-size="10">↓ Email Provider</text>
+        </svg>
+      </div>
+
+      <div class="callout reveal">
+        <p><em>Rule —</em> Don't create permanent branches for team members. Create branches based on the Jira ticket being worked on (e.g., <code>feature/AUX-13-jwt-auth</code>).</p>
+      </div>
+    </section>
+
+    <!-- FRONTEND REPO -->
+    <section id="frontend">
+      <div class="section-num reveal">Section 02</div>
+      <h2 class="section-title reveal">Frontend <em>Repository</em>.</h2>
+      <p class="section-lede reveal">The React application. Kept strictly separated by domain (auth, admin, manager, teamOwner) to prevent a giant soup of components.</p>
+
+      <div class="tree-grid reveal">
+        <div class="repo-card">
+          <div class="repo-header">
+            <div class="repo-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 22V8l10-6 10 6v14"/><path d="M2 22h20"/><path d="M6 22V12h12v10"/></svg>
+            </div>
+            <div class="repo-name">auctxi-frontend</div>
+          </div>
+          <div class="file-tree"><span class="dir">auctxi-frontend/</span>
+│
+├── <span class="dir">public/</span>
+│
+├── <span class="dir">src/</span>
+│   │
+│   ├── <span class="dir">assets/</span>
+│   │   ├── <span class="dir">images/</span>
+│   │   ├── <span class="dir">icons/</span>
+│   │   └── <span class="dir">logos/</span>
+│   │
+│   ├── <span class="dir">components/</span>
+│   │   ├── <span class="dir">common/</span> <span class="com">(Button.jsx, Loader.jsx, Modal.jsx)</span>
+│   │   ├── <span class="dir">layout/</span> <span class="com">(Navbar.jsx, Sidebar.jsx, Footer.jsx)</span>
+│   │   ├── <span class="dir">auction/</span>
+│   │   ├── <span class="dir">player/</span>
+│   │   └── <span class="dir">team/</span>
+│   │
+│   ├── <span class="dir">pages/</span>
+│   │   ├── <span class="dir">auth/</span> <span class="com">(LoginPage.jsx, RegisterPage.jsx)</span>
+│   │   ├── <span class="dir">admin/</span> <span class="com">(AdminDashboard.jsx, AuctionsPage.jsx, ...)</span>
+│   │   ├── <span class="dir">manager/</span> <span class="com">(ManagerDashboard.jsx, LiveAuctionPage.jsx, ...)</span>
+│   │   ├── <span class="dir">teamOwner/</span> <span class="com">(TeamOwnerDashboard.jsx, MyTeamPage.jsx, ...)</span>
+│   │   └── <span class="dir">public/</span> <span class="com">(HomePage.jsx, AuctionDetailsPage.jsx, ...)</span>
+│   │
+│   ├── <span class="dir">services/</span> <span class="com">(api.js, authService.js, playerService.js, ...)</span>
+│   ├── <span class="dir">context/</span> <span class="com">(AuthContext.jsx)</span>
+│   ├── <span class="dir">hooks/</span> <span class="com">(useAuth.js)</span>
+│   ├── <span class="dir">routes/</span> <span class="com">(AppRoutes.jsx, ProtectedRoute.jsx)</span>
+│   ├── <span class="dir">utils/</span> <span class="com">(helpers.js)</span>
+│   ├── <span class="dir">constants/</span> <span class="com">(constants.js)</span>
+│   ├── <span class="dir">styles/</span>
+│   ├── <span class="file">App.jsx</span>
+│   └── <span class="file">main.jsx</span>
+│
+├── <span class="dir">tests/</span>
+├── <span class="hl">.env</span> <span class="bad">(DO NOT COMMIT)</span>
+├── <span class="hl">.env.example</span> <span class="good">(COMMIT)</span>
+├── <span class="file">.gitignore</span>
+├── <span class="file">Dockerfile</span>
+├── <span class="file">eslint.config.js</span>
+├── <span class="file">package.json</span>
+├── <span class="file">vite.config.js</span>
+└── <span class="file">README.md</span></div>
+        </div>
+      </div>
+
+      <div class="callout reveal">
+        <p><em>Env Vars —</em> <code>.env</code> must never be committed. <code>.env.example</code> should be committed with empty values (e.g., <code>VITE_API_BASE_URL=</code>) so the team knows what keys are required.</p>
+      </div>
+    </section>
+
+    <!-- BACKEND REPO -->
+    <section id="backend">
+      <div class="section-num reveal">Section 03</div>
+      <h2 class="section-title reveal">Backend <em>Repository</em>.</h2>
+      <p class="section-lede reveal">The Spring Boot monolith. Packages are organized by technical layer (controller, service, repository) to keep the main application core readable.</p>
+
+      <div class="tree-grid reveal">
+        <div class="repo-card">
+          <div class="repo-header">
+            <div class="repo-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+            </div>
+            <div class="repo-name">auctxi-backend</div>
+          </div>
+          <div class="file-tree"><span class="dir">auctxi-backend/</span>
+│
+├── <span class="dir">src/</span>
+│   ├── <span class="dir">main/</span>
+│   │   ├── <span class="dir">java/</span>
+│   │   │   └── <span class="dir">com/auctxi/</span>
+│   │   │       │
+│   │   │       ├── <span class="file">AuctXiApplication.java</span>
+│   │   │       │
+│   │   │       ├── <span class="dir">config/</span> <span class="com">(SecurityConfig.java, CorsConfig.java)</span>
+│   │   │       ├── <span class="dir">controller/</span> <span class="com">(AuthController, UserController, PlayerController, ...)</span>
+│   │   │       ├── <span class="dir">service/</span> <span class="com">(AuthService, PlayerService, BidService, ...)</span>
+│   │   │       ├── <span class="dir">repository/</span> <span class="com">(UserRepository, PlayerRepository, ...)</span>
+│   │   │       ├── <span class="dir">entity/</span> <span class="com">(User.java, Player.java, Auction.java, ...)</span>
+│   │   │       ├── <span class="dir">dto/</span>
+│   │   │       │   ├── <span class="dir">request/</span>
+│   │   │       │   └── <span class="dir">response/</span>
+│   │   │       ├── <span class="dir">security/</span> <span class="com">(JwtService, JwtAuthenticationFilter, ...)</span>
+│   │   │       ├── <span class="dir">exception/</span> <span class="com">(GlobalExceptionHandler, InvalidBidException, ...)</span>
+│   │   │       ├── <span class="dir">mapper/</span>
+│   │   │       └── <span class="dir">util/</span>
+│   │   │
+│   │   └── <span class="dir">resources/</span>
+│   │       ├── <span class="file">application.properties</span>
+│   │       ├── <span class="file">application-dev.properties</span>
+│   │       └── <span class="file">application-prod.properties</span>
+│   │
+│   └── <span class="dir">test/</span>
+│       └── <span class="dir">java/com/auctxi/</span>
+│           ├── <span class="dir">controller/</span>
+│           ├── <span class="dir">service/</span>
+│           ├── <span class="dir">repository/</span>
+│           └── <span class="dir">integration/</span>
+│
+├── <span class="dir">docs/</span> <span class="com">(requirements, architecture, database, api)</span>
+├── <span class="file">.gitignore</span>
+├── <span class="file">Dockerfile</span>
+├── <span class="file">pom.xml</span>
+└── <span class="file">README.md</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES REPO -->
+    <section id="services">
+      <div class="section-num reveal">Section 04</div>
+      <h2 class="section-title reveal">.NET Services <em>Repository</em>.</h2>
+      <p class="section-lede reveal">Contains both microservices under one solution file. They share the same repository because they are part of the same infrastructure boundary, but remain independently deployable.</p>
+
+      <div class="tree-grid reveal">
+        <div class="repo-card">
+          <div class="repo-header">
+            <div class="repo-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </div>
+            <div class="repo-name">auctxi-services</div>
+          </div>
+          <div class="file-tree"><span class="dir">auctxi-services/</span>
+│
+├── <span class="dir">payment-service/</span>
+│   ├── <span class="dir">Controllers/</span> <span class="com">(HealthController.cs, PaymentController.cs)</span>
+│   ├── <span class="dir">Services/</span> <span class="com">(PaymentService.cs)</span>
+│   ├── <span class="dir">Interfaces/</span> <span class="com">(IPaymentService.cs)</span>
+│   ├── <span class="dir">Models/</span> <span class="com">(Payment.cs)</span>
+│   ├── <span class="dir">DTOs/</span> <span class="com">(PaymentRequestDto.cs, PaymentResponseDto.cs)</span>
+│   ├── <span class="dir">Configuration/</span> <span class="com">(RazorpaySettings.cs)</span>
+│   ├── <span class="dir">Exceptions/</span>
+│   ├── <span class="dir">Tests/</span> <span class="com">(Unit/, Integration/)</span>
+│   ├── <span class="file">Program.cs</span>
+│   ├── <span class="file">appsettings.json</span>
+│   ├── <span class="file">Dockerfile</span>
+│   └── <span class="file">README.md</span>
+│
+├── <span class="dir">notification-service/</span>
+│   ├── <span class="dir">Controllers/</span> <span class="com">(HealthController.cs, NotificationController.cs)</span>
+│   ├── <span class="dir">Services/</span> <span class="com">(NotificationService.cs)</span>
+│   ├── <span class="dir">Interfaces/</span> <span class="com">(INotificationService.cs)</span>
+│   ├── <span class="dir">Models/</span> <span class="com">(Notification.cs)</span>
+│   ├── <span class="dir">DTOs/</span> <span class="com">(NotificationRequestDto.cs)</span>
+│   ├── <span class="dir">Templates/</span> <span class="com">(RegistrationEmail.html, PaymentConfirmation.html)</span>
+│   ├── <span class="dir">Configuration/</span>
+│   ├── <span class="dir">Exceptions/</span>
+│   ├── <span class="dir">Tests/</span> <span class="com">(Unit/, Integration/)</span>
+│   ├── <span class="file">Program.cs</span>
+│   ├── <span class="file">appsettings.json</span>
+│   ├── <span class="file">Dockerfile</span>
+│   └── <span class="file">README.md</span>
+│
+├── <span class="file">.gitignore</span>
+├── <span class="file">AuctXi.Services.sln</span>
+└── <span class="file">README.md</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INFRA REPO -->
+    <section id="infra">
+      <div class="section-num reveal">Section 05</div>
+      <h2 class="section-title reveal">Infrastructure <em>Repository</em>.</h2>
+      <p class="section-lede reveal">Holds deployment-related configuration. Individual Dockerfiles live with their apps, but the orchestration (Docker Compose) and pipelines (Jenkins) live here.</p>
+
+      <div class="tree-grid reveal">
+        <div class="repo-card">
+          <div class="repo-header">
+            <div class="repo-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+            </div>
+            <div class="repo-name">auctxi-infra</div>
+          </div>
+          <div class="file-tree"><span class="dir">auctxi-infra/</span>
+│
+├── <span class="dir">docker/</span>
+│   ├── <span class="file">docker-compose.yml</span>
+│   └── <span class="file">.env.example</span>
+│
+├── <span class="dir">jenkins/</span>
+│   ├── <span class="file">Jenkinsfile</span>
+│   └── <span class="file">README.md</span>
+│
+├── <span class="dir">deployment/</span>
+│   ├── <span class="dir">frontend/</span>
+│   ├── <span class="dir">backend/</span>
+│   ├── <span class="dir">payment-service/</span>
+│   └── <span class="dir">notification-service/</span>
+│
+├── <span class="dir">scripts/</span>
+│   ├── <span class="file">build.sh</span>
+│   ├── <span class="file">start.sh</span>
+│   └── <span class="file">stop.sh</span>
+│
+├── <span class="dir">docs/</span>
+│   ├── <span class="file">local-setup.md</span>
+│   ├── <span class="file">docker-setup.md</span>
+│   └── <span class="file">deployment-guide.md</span>
+│
+├── <span class="file">.gitignore</span>
+└── <span class="file">README.md</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONNECTIONS -->
+    <section id="connections">
+      <div class="section-num reveal">Section 06</div>
+      <h2 class="section-title reveal">How Everything <em>Connects</em>.</h2>
+      <p class="section-lede reveal">The infrastructure repository wraps the application repositories. The frontend talks to the backend, and the backend talks to the microservices and the database.</p>
+
+      <div class="diagram-wrap reveal">
+        <svg class="connect-svg" viewBox="0 0 800 650" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1c1c22"/>
+              <stop offset="100%" stop-color="#15151a"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Infra Wrapping Box -->
+          <rect x="20" y="20" width="760" height="610" rx="16" fill="none" stroke="#3f3f46" stroke-width="1.5" stroke-dasharray="6 6"/>
+          <text x="40" y="45" fill="#6b6b75" font-family="JetBrains Mono" font-size="11" letter-spacing="2">AuctXI INFRASTRUCTURE</text>
+          
+          <!-- Docker Compose Box -->
+          <rect x="40" y="60" width="200" height="60" rx="8" fill="url(#g2)" stroke="#fbbf24" stroke-width="1"/>
+          <text x="140" y="85" text-anchor="middle" fill="#fbbf24" font-family="Space Grotesk" font-size="13" font-weight="600">Docker Compose</text>
+          <text x="140" y="105" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">Runs all services</text>
+
+          <!-- Jenkins Box -->
+          <rect x="560" y="60" width="200" height="60" rx="8" fill="url(#g2)" stroke="#fbbf24" stroke-width="1"/>
+          <text x="660" y="85" text-anchor="middle" fill="#fbbf24" font-family="Space Grotesk" font-size="13" font-weight="600">Jenkins</text>
+          <text x="660" y="105" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">Build → Test → Deploy</text>
+
+          <!-- Frontend -->
+          <rect x="250" y="170" width="300" height="70" rx="10" fill="url(#g2)" stroke="#22d3ee" stroke-width="1.5"/>
+          <text x="400" y="200" text-anchor="middle" fill="#22d3ee" font-family="Space Grotesk" font-size="15" font-weight="600">auctxi-frontend</text>
+          <text x="400" y="220" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">React</text>
+
+          <line x1="400" y1="240" x2="400" y2="280" stroke="#3f3f46" stroke-width="1.5"/>
+          <polygon points="400,285 396,277 404,277" fill="#3f3f46"/>
+          <text x="410" y="265" fill="#22d3ee" font-family="JetBrains Mono" font-size="10">REST API</text>
+
+          <!-- Backend -->
+          <rect x="150" y="290" width="500" height="100" rx="10" fill="url(#g2)" stroke="#fbbf24" stroke-width="1.5"/>
+          <text x="400" y="320" text-anchor="middle" fill="#fbbf24" font-family="Space Grotesk" font-size="15" font-weight="600">auctxi-backend</text>
+          <text x="400" y="340" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">Spring Boot</text>
+          
+          <!-- Backend branching lines -->
+          <path d="M 400 390 L 400 420 L 150 420 L 150 450" stroke="#3f3f46" stroke-width="1.5" fill="none"/>
+          <path d="M 400 390 L 400 420 L 650 420 L 650 450" stroke="#3f3f46" stroke-width="1.5" fill="none"/>
+          <text x="250" y="435" fill="#6b6b75" font-family="JetBrains Mono" font-size="9">HTTP</text>
+          <text x="550" y="435" fill="#6b6b75" font-family="JetBrains Mono" font-size="9">HTTP</text>
+          
+          <!-- Payment Service -->
+          <rect x="50" y="450" width="200" height="70" rx="10" fill="url(#g2)" stroke="#fb7185" stroke-width="1.5"/>
+          <text x="150" y="480" text-anchor="middle" fill="#fb7185" font-family="Space Grotesk" font-size="14" font-weight="600">payment-service</text>
+          <text x="150" y="500" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">.NET</text>
+
+          <!-- Notification Service -->
+          <rect x="550" y="450" width="200" height="70" rx="10" fill="url(#g2)" stroke="#34d399" stroke-width="1.5"/>
+          <text x="650" y="480" text-anchor="middle" fill="#34d399" font-family="Space Grotesk" font-size="14" font-weight="600">notification-service</text>
+          <text x="650" y="500" text-anchor="middle" fill="#a1a1aa" font-family="JetBrains Mono" font-size="10">.NET</text>
+
+          <!-- Backend to MySQL line -->
+          <path d="M 400 390 L 400 540 L 400 560" stroke="#f59e0b" stroke-width="1.5" fill="none" stroke-dasharray="4 4"/>
+          <polygon points="400,565 396,557 404,557" fill="#f59e0b"/>
+          <text x="410" y="540" fill="#f59e0b" font-family="JetBrains Mono" font-size="10">JDBC</text>
+
+          <!-- MySQL -->
+          <ellipse cx="400" cy="580" rx="80" ry="18" fill="url(#g2)" stroke="#f59e0b" stroke-width="1.5"/>
+          <text x="400" y="585" text-anchor="middle" fill="#f59e0b" font-family="JetBrains Mono" font-size="13" font-weight="500">MySQL</text>
+          
+          <!-- Jenkins arrows pointing to repos -->
+          <path d="M 580 100 L 400 100 L 400 165" stroke="#3f3f46" stroke-width="1" stroke-dasharray="2 4" fill="none"/>
+          <path d="M 600 120 L 550 120 L 550 290" stroke="#3f3f46" stroke-width="1" stroke-dasharray="2 4" fill="none"/>
+          
+        </svg>
+      </div>
+    </section>
+
+    <!-- DAY 1 STRATEGY -->
+    <section id="day1">
+      <div class="section-num reveal">Section 07</div>
+      <h2 class="section-title reveal">The <em>Day 1</em> Strategy.</h2>
+      <p class="section-lede reveal">Do not create this entire folder tree manually upfront. Create only the structural foundation. The structure should grow naturally with the implementation.</p>
+
+      <div class="callout reveal">
+        <p><em>Avoid the beginner mistake —</em> Do not create a massive "professional-looking" folder structure filled with empty folders and placeholder files.</p>
+      </div>
+
+      <h3 class="sub-title reveal" style="font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--fg);margin:32px 0 16px;display:flex;align-items:center;gap:10px;">
+        <span style="content:"";width:6px;height:6px;background:var(--gold);border-radius:1px;transform:rotate(45deg)"></span>
+        What actually gets created on Day 1
+      </h3>
+
+      <div class="tree-grid reveal">
+        <div class="repo-card">
+          <div class="repo-header">
+            <div class="repo-name">Day 1 Minimal Structure</div>
+          </div>
+          <div class="file-tree"><span class="com"># Frontend</span>
+<span class="dir">src/</span>
+├── <span class="dir">components/</span>
+├── <span class="dir">pages/</span>
+├── <span class="dir">services/</span> <span class="com">(api.js only)</span>
+└── <span class="dir">routes/</span>
+
+<span class="com"># Backend</span>
+<span class="dir">com.auctxi/</span>
+├── <span class="dir">controller/</span> <span class="com">(HealthController.java)</span>
+├── <span class="dir">service/</span>
+├── <span class="dir">repository/</span>
+├── <span class="dir">entity/</span>
+├── <span class="dir">dto/</span>
+└── <span class="dir">config/</span>
+
+<span class="com"># Services</span>
+├── <span class="dir">payment-service/</span> <span class="com">(Basic .NET Web API skeleton)</span>
+└── <span class="dir">notification-service/</span> <span class="com">(Basic .NET Web API skeleton)</span>
+
+<span class="com"># Infra</span>
+├── <span class="dir">docker/</span>
+├── <span class="dir">jenkins/</span>
+└── <span class="dir">docs/</span></div>
+        </div>
+      </div>
+
+      <p style="margin-top: 24px;">Then add <code style="font-family:var(--mono);color:var(--gold)">security/</code> when you start authentication on Day 2, <code style="font-family:var(--mono);color:var(--gold)">auction/</code> components when you start auction development on Day 4, <code style="font-family:var(--mono);color:var(--gold)">Tests/</code> as you implement functionality, etc.</p>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div>
+        <div class="footer-brand">Auct<em>XI</em></div>
+        <p style="margin-top:8px;color:var(--fg-muted);font-size:13px">Cricket auction platform · Built in 9 days by 4 engineers</p>
+      </div>
+      <div class="footer-meta">
+        <div>Vijay · Akram · Rahil · Prajwal</div>
+        <div style="margin-top:6px">Repo Blueprint · 2025</div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // HERO CANVAS (Abstract connection lines)
+  (function(){
+    const c = document.getElementById('heroCanvas');
+    if(!c) return;
+    const ctx = c.getContext('2d');
+    let w,h,nodes=[];
+    function resize(){
+      w = c.width = c.offsetWidth * devicePixelRatio;
+      h = c.height = c.offsetHeight * devicePixelRatio;
+      ctx.scale(devicePixelRatio,devicePixelRatio);
+      buildNodes();
+    }
+    function buildNodes(){
+      nodes = [];
+      const cw = c.offsetWidth, ch = c.offsetHeight;
+      const count = Math.floor(cw * ch / 25000);
+      for(let i=0;i<count;i++){
+        nodes.push({
+          x: Math.random()*cw,
+          y: Math.random()*ch,
+          vx: (Math.random()-0.5)*0.2,
+          vy: (Math.random()-0.5)*0.2,
+          r: 1 + Math.random()*1.5
+        });
+      }
+    }
+    function draw(){
+      ctx.clearRect(0,0,c.offsetWidth,c.offsetHeight);
+      const cw = c.offsetWidth, ch = c.offsetHeight;
+      
+      // Draw connections
+      for(let i=0; i<nodes.length; i++){
+        for(let j=i+1; j<nodes.length; j++){
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx*dx + dy*dy);
+          if(dist < 120){
+            ctx.strokeStyle = `rgba(251,191,36,${0.15 * (1 - dist/120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(nodes[i].x, nodes[i].y);
+            ctx.lineTo(nodes[j].x, nodes[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      // Draw nodes
+      nodes.forEach(n=>{
+        n.x += n.vx;
+        n.y += n.vy;
+        if(n.x < 0 || n.x > cw) n.vx *= -1;
+        if(n.y < 0 || n.y > ch) n.vy *= -1;
+        
+        ctx.fillStyle = 'rgba(251,191,36,0.4)';
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    draw();
+  })();
+
+  // REVEAL ON SCROLL
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  },{threshold:0.12, rootMargin:'0px 0px -40px 0px'});
+  reveals.forEach(r=>io.observe(r));
+
+  // ACTIVE NAV + PROGRESS
+  const links = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('section');
+  const fill = document.getElementById('progressFill');
+  const pct = document.getElementById('progressPct');
+
+  function update(){
+    let current = '';
+    sections.forEach(s=>{
+      const top = s.getBoundingClientRect().top;
+      if(top < 120) current = s.id;
+    });
+    links.forEach(l=>{
+      l.classList.toggle('active', l.getAttribute('href') === '#'+current);
+    });
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const p = Math.min(100, Math.max(0, (window.scrollY / docH) * 100));
+    fill.style.width = p + '%';
+    pct.textContent = Math.round(p) + '%';
+  }
+  window.addEventListener('scroll', update, {passive:true});
+  update();
+
+  // CLOSE MOBILE NAV ON CLICK
+  document.querySelectorAll('.nav-link').forEach(l=>{
+    l.addEventListener('click', ()=>{
+      document.querySelector('.sidenav').classList.remove('open');
+    });
+  });
+</script>
+
+</body>
+</html>

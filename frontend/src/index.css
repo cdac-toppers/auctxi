@@ -9,14 +9,29 @@ body {
 }
 
 @theme {
-    /* Core Brand & UI Elements */
-    --color-primary: #F59E0B;
-    --color-bg-main: #FAFAFA;
-    --color-sidebar: #111827;
-    --color-card: #FFFFFF;
-    --color-border-custom: #E5E7EB;
 
-    /* Status Colors */
+    /* Brand */
+    --color-primary: #F59E0B;
+    --color-primary-hover: #D97706;
+
+    /* Background */
+    --color-bg: #FAFAFA;
+    --color-surface: #FFFFFF;
+
+    /* Sidebar */
+    --color-sidebar: #111827;
+    --color-sidebar-hover: #1F2937;
+    --color-sidebar-active: #F59E0B;
+
+    /* Text */
+    --color-text: #111827;
+    --color-text-secondary: #6B7280;
+    --color-text-muted: #9CA3AF;
+
+    /* Border */
+    --color-border: #E5E7EB;
+
+    /* Status */
     --color-success: #22C55E;
     --color-warning: #F59E0B;
     --color-danger: #EF4444;
